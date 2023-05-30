@@ -1,13 +1,19 @@
 
 import argparse
+import os
+
+import atlas_gen
+import grayscale
+
 
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 
 
 supported_ops = [
-    "4x4_split"
+    "4x4_split", "grayscale"
 ]
+
 
 parser.add_argument(
     'type', 
@@ -20,13 +26,13 @@ args = parser.parse_args()
 
 
 
-import atlas_gen
-import os
 
 
 def apply(inn, out):
     if args.type == "4x4_split":
         atlas_gen.run(inn, out)
+    elif args.type == "grayscale":
+        grayscale.run(inn, out)
 
 
 INPUT_PTH = "_input_"
@@ -39,8 +45,9 @@ def apply_to_all(pth, func):
         for p in os.listdir(pth):
             apply_to_all(pth + SEP + p, func)
     else:
-        out = pth.replace(INPUT_PTH, OUTPUT_PTH)
-        func(pth, out)
+        outpth = pth.replace(INPUT_PTH, OUTPUT_PTH)
+        os.makedirs(os.path.dirname(outpth), exist_ok=True)
+        func(pth, outpth)
 
 
 def get_input():
@@ -52,15 +59,5 @@ def get_output():
 
 
 apply_to_all(get_input(), apply)
-
-
-
-root = get_output()
-folders = list(os.walk(root))[1:]
-
-for folder in folders:
-    # folder example: ('FOLDER/3', [], ['file'])
-    if not folder[2]:
-        os.rmdir(folder[0])
 
 

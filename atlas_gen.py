@@ -50,10 +50,8 @@ def run(inpth, outpth):
         for s in IGNORE:
             if s in inpth:
                 return
-        
         splt = os.path.splitext(outpth)
         pth = splt[0]
-        os.makedirs(pth)
         split_NxN(pth, im, 4,4)
 
 
