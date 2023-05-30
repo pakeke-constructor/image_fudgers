@@ -28,26 +28,29 @@ def split_NxN(pth, im, count_x, count_y):
     splits an image into count_x * count_y portions
     '''
     imgwidth, imgheight = im.size
-    step_x = int(imgwidth / count_x)
-    step_y = int(imgwidth / count_y)
+    step_x = round(imgwidth / count_x)
+    step_y = round(imgheight / count_y)
 
-    for i in range(0, imgwidth, step_x):
-        for j in range(0, imgheight, step_y):
-            box = (j, i, j+step_x, i+step_y)
+    for x in range(0, imgwidth, step_x):
+        for y in range(0, imgheight, step_y):
+            box = (x, y, x+step_x, y+step_y)
             a = im.crop(box)
 
-            xx = int(i/step_x)
-            yy = int(j/step_y)
-            a.save(get_name(pth, xx, yy))
+            i = round(x/step_x)
+            j = round(y/step_y)
+            a.save(get_name(pth, i, j))
 
 
 IGNORE = {"die", "hit", "idle", "attack"}
+
+
 
 def run(inpth, outpth):
     with Image.open(inpth) as im:
         for s in IGNORE:
             if s in inpth:
                 return
+        
         splt = os.path.splitext(outpth)
         pth = splt[0]
         os.makedirs(pth)

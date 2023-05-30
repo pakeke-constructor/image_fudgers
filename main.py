@@ -47,5 +47,20 @@ def get_input():
     return os.getcwd() + SEP + INPUT_PTH
 
 
+def get_output():
+    return os.getcwd() + SEP + OUTPUT_PTH
+
+
 apply_to_all(get_input(), apply)
+
+
+
+root = get_output()
+folders = list(os.walk(root))[1:]
+
+for folder in folders:
+    # folder example: ('FOLDER/3', [], ['file'])
+    if not folder[2]:
+        os.rmdir(folder[0])
+
 
